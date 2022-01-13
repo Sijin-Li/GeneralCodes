@@ -18,33 +18,39 @@ calculateTransform: calculating 'geotrans' affine transformation
 clipgeotiff_topatch: clip the complete data to small patches. (nonrandom)
 '''
 
+
 def readtiff2array(oriPath):
-    
     in_ds = gdal.Open(oriPath)
     print("open tif file succeed")
-    
-    #读取原图中的每个波段
-    row=in_ds.RasterYSize  #行
-    col=in_ds.RasterXSize  #列
-    band=in_ds.RasterCount#波段    
+
+    # 读取原图中的每个波段
+    row = in_ds.RasterYSize  # 行
+    col = in_ds.RasterXSize  # 列
+    band = in_ds.RasterCount  # 波段
     geoTrans = in_ds.GetGeoTransform()
     geoPro = in_ds.GetProjection()
 
     # specific datatype
-    datatype = np.int8  # gdal.GDT_UInt16;
-    data = np.zeros([row, col, band], datatype)  # 建立数组保存读取的tiff
+    #     datatype = np.int8  # gdal.GDT_UInt16;
+    #     data = np.zeros([row, col, band], datatype)  # 建立数组保存读取的tiff
     # output datatype = input datatype (常用于裁剪DEM uint16）
-    #    datatype_index = in_ds.GetRasterBand(1).DataType
-    #    datatype = gdal.GetDataTypeName(datatype_index)
-    #    data=np.zeros([row,col,band],datatype)#建立数组保存读取的tiff
+    datatype_index = in_ds.GetRasterBand(1).DataType
+    datatype = gdal.GetDataTypeName(datatype_index)
+    if 'GDT_Byte' in datatype:
+        newDataType = 'int8'
+    elif 'GDT_UInt16' in datatype:
+        newDataType = 'int16'
+    else:
+        newDataType = 'float32'
+    data = np.zeros([row, col, band], newDataType)  # 建立数组保存读取的tiff
 
     for i in range(band):
-        dt=in_ds.GetRasterBand(i+1)
-        #从每个波段中裁剪需要的矩形框内的数据
-        data[:,:,i]=dt.ReadAsArray(0,0,col,row)
-        
+        dt = in_ds.GetRasterBand(i + 1)
+        # 从每个波段中裁剪需要的矩形框内的数据
+        data[:, :, i] = dt.ReadAsArray(0, 0, col, row)
+
     del in_ds
-        
+
     return data, [band, datatype, geoTrans, geoPro]
     # data shape = HWC
 '''
@@ -197,11 +203,13 @@ def writeTifffile(out_band, saveName):
 '''
 保存为PNG
 '''
-def write_to_disk(path, img_data, from_names, over_write=False):
-    
+def write_to_disk(savePath, img_data, from_names, over_write=False):
+
+    os.makedirs(savePath, exist_ok=True)
+
     full_name = from_names.replace(".tif", ".png")
     print(img_data.dtype)
-    save_filePath = os.path.join(path, full_name)
+    save_filePath = os.path.join(savePath, full_name)
     
 #    im = Image.fromarray(np.uint16(img_data))
 #    im.save(save_filePath) #--> 16bit
