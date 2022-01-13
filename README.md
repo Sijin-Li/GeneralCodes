@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-# GeneralCodes
 
-please find codes in master branch.
-=======
-# GeneralCodes-master
+# GeneralCodes
 
 ## introduction
 for studying; CNN preprocessing
->>>>>>> master
+
