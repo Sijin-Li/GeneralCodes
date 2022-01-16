@@ -31,9 +31,10 @@ def readtiff2array(oriPath):
     geoPro = in_ds.GetProjection()
 
     # specific datatype
-    #     datatype = np.int8  # gdal.GDT_UInt16;
-    #     data = np.zeros([row, col, band], datatype)  # 建立数组保存读取的tiff
-    # output datatype = input datatype (常用于裁剪DEM uint16）
+    #     newDataType = gdal.GDT_UInt16;
+    #     data = np.zeros([row, col, band], newDataType)  # 建立数组保存读取的tiff
+
+    # according to the input datatype
     datatype_index = in_ds.GetRasterBand(1).DataType
     datatype = gdal.GetDataTypeName(datatype_index)
     if 'GDT_Byte' in datatype:
@@ -55,12 +56,42 @@ def readtiff2array(oriPath):
     # data shape = HWC
 '''
 16bit to 8bit
+for slope data, nodata value = 91, therefore we need to find a maximum except nodatavalue and view it as the max_16bit
 '''
-def transfer_16bit_to_8bit(data):
-    # 将16bit转化为8bit
-    # 可用于dem裁剪
-    min_16bit = np.min(data)
-    max_16bit = np.max(data)
+def transfer_16bit_to_8bit(data, isSlope, nodatavalue=91):
+    # transform to 8bit
+    min_16bit = 0
+    max_16bit = 0
+    if isSlope is True:
+
+        # 先对有效值区域进行处理，找到有效值的最大最小值
+        ## 找到有效值的所有索引
+        indexLS = np.argwhere(data<nodatavalue)
+        ## indexLS为tuple，shape=[n,3],n代表有多少行
+        ## 具体在图像中的坐标为 indexLS.shape[0][0], indexLS.shape[0][1]
+        rows = indexLS.shape[0]
+        i = 0
+        for i in range(rows):
+            ## 找到其临时值
+            tempValue = data[indexLS[i][0],indexLS[i][1],0]
+            ## 对临时值进行判断
+            if tempValue != 91:
+                if tempValue > max_16bit:
+                    max_16bit = tempValue
+                elif tempValue < min_16bit:
+                    min_16bit = tempValue
+
+        # 进而对无效值（通常为91）进行处理，思路为将其改为最大值+最大值的10%
+        # 循环过程与上一步类似
+        indexGE = np.argwhere(data>=nodatavalue)
+        rows = indexGE.shape[0]
+        i = 0
+        for i in range(rows):
+            data[indexGE[i][0],indexGE[i][1],0] = max_16bit #+ max_16bit*0.1
+        print(max_16bit, min_16bit)
+    else:
+        min_16bit = np.min(data)
+        max_16bit = np.max(data)
 
     data_8bit = np.array(np.rint(255 * ((data - min_16bit) / (max_16bit - min_16bit))), dtype=np.uint8)
     return data_8bit
@@ -86,7 +117,7 @@ def calculateTransform(ori_transform, offsetX, offsetY):
 裁剪主函数 调用topatch
 typeName & index: 输入数据编号
 '''
-def clipgeotiff(inputPath, savePath, patchSize, patchIntersection, startCol, startRow, typeName, index, To8bit=False):
+def clipgeotiff(inputPath, savePath, patchSize, patchIntersection, startCol, startRow, typeName, index, To8bit=False, isSlope=False):
     os.makedirs(savePath, exist_ok=True)
     # 遍历文件夹
     from_names = glob.glob(os.path.join(inputPath, "*.tif"))
@@ -102,7 +133,7 @@ def clipgeotiff(inputPath, savePath, patchSize, patchIntersection, startCol, sta
 
         # 16bit to 8bit
         if To8bit is True:
-            inputData = transfer_16bit_to_8bit(inputData)
+            inputData = transfer_16bit_to_8bit(inputData, isSlope)
 
         # 裁剪 起始坐标
         # 原始代码的[offsetY, offsetX] = [offsetRow, offsetCol]
