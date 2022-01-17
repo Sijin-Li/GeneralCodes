@@ -8,7 +8,7 @@ Created on Sat Nov 28 22:10:05 2020
 
 # concatenate gully line and ridge line
 import numpy as np
-import gdal
+from osgeo import gdal
 import glob
 import os
 import copy

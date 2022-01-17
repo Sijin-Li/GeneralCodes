@@ -7,7 +7,7 @@ Created on Mon Nov 23 13:53:44 2020
 
 
 import numpy as np
-import gdal
+from osgeo import gdal
 import os
 import imageio
 import glob
