@@ -15,6 +15,8 @@ import copy
 import imageio
 import cv2
 
+from TiffReadClipWrite import write_to_disk
+
 
 def concate_samples(sample1, sample2, savepath, filename):
     sample1 = sample1.reshape((1, sample1.shape[0], sample1.shape[1], sample1.shape[2]))

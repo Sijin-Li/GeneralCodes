@@ -54,10 +54,14 @@ def readtiff2array(oriPath):
 
     return data, [band, datatype, geoTrans, geoPro]
     # data shape = HWC
+
+
 '''
 16bit to 8bit
-for slope data, nodata value = 91, therefore we need to find a maximum except nodatavalue and view it as the max_16bit
+for slope data, nodata value = 91, therefore we need to find a maximum except 91 and view it as the max_16bit
 '''
+
+
 def transfer_16bit_to_8bit(data, isSlope, nodatavalue=91):
     # transform to 8bit
     min_16bit = 0
@@ -66,14 +70,14 @@ def transfer_16bit_to_8bit(data, isSlope, nodatavalue=91):
 
         # 先对有效值区域进行处理，找到有效值的最大最小值
         ## 找到有效值的所有索引
-        indexLS = np.argwhere(data<nodatavalue)
+        indexLS = np.argwhere(data < nodatavalue)
         ## indexLS为tuple，shape=[n,3],n代表有多少行
         ## 具体在图像中的坐标为 indexLS.shape[0][0], indexLS.shape[0][1]
         rows = indexLS.shape[0]
         i = 0
         for i in range(rows):
             ## 找到其临时值
-            tempValue = data[indexLS[i][0],indexLS[i][1],0]
+            tempValue = data[indexLS[i][0], indexLS[i][1], 0]
             ## 对临时值进行判断
             if tempValue != 91:
                 if tempValue > max_16bit:
@@ -81,13 +85,13 @@ def transfer_16bit_to_8bit(data, isSlope, nodatavalue=91):
                 elif tempValue < min_16bit:
                     min_16bit = tempValue
 
-        # 进而对无效值（通常为91）进行处理，思路为将其改为最大值+最大值的10%
+                    # 进而对无效值（通常为91）进行处理，思路为将其改为最大值+最大值的10%
         # 循环过程与上一步类似
-        indexGE = np.argwhere(data>=nodatavalue)
+        indexGE = np.argwhere(data >= nodatavalue)
         rows = indexGE.shape[0]
         i = 0
         for i in range(rows):
-            data[indexGE[i][0],indexGE[i][1],0] = max_16bit #+ max_16bit*0.1
+            data[indexGE[i][0], indexGE[i][1], 0] = max_16bit  # + max_16bit*0.1
         print(max_16bit, min_16bit)
     else:
         min_16bit = np.min(data)
@@ -95,9 +99,13 @@ def transfer_16bit_to_8bit(data, isSlope, nodatavalue=91):
 
     data_8bit = np.array(np.rint(255 * ((data - min_16bit) / (max_16bit - min_16bit))), dtype=np.uint8)
     return data_8bit
+
+
 '''
 仿射变换
 '''
+
+
 def calculateTransform(ori_transform, offsetX, offsetY):
     # 读取原图仿射变换参数值
     top_left_x = ori_transform[0]  # 左上角x坐标
