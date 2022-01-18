@@ -18,8 +18,10 @@ I used UNet, ResNet, ResUNet, pix2pix before, and I'll put them here in the next
 > * UNet
 > > * [UNet-Keras](https://github.com/zhixuhao/unet)
 > > * [UNet-pytorch-origin version](https://github.com/milesial/Pytorch-UNet)
+> > > * using mask01_crop (background: 0, target: 1)
 > * ResUNet
 > > * [origin pytorch version](https://github.com/rishikksh20/ResUnet)
 > > * [adjusted version for gully detection](https://github.com/Sijin-Li/GeneralCodes/tree/main/2generalmodel/ResUNet/Adjusted)
+> > > * using mask_crop (background: 0, target: 255)
 > * pix2pix
 
