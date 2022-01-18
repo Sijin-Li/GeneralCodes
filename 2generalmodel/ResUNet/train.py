@@ -9,6 +9,7 @@ import dataloader
 import metrics
 from res_unet import ResUnet
 from res_unet_plus import ResUnetPlusPlus
+from unet_model import UNet
 from logger import MyWriter
 import torch
 import argparse
@@ -38,6 +39,8 @@ def main(hp, num_epochs, resume, name):
 
     if hp.RESNET_PLUS_PLUS:
         model = ResUnetPlusPlus(3).cuda()
+    elif hp.UNET:
+        model = UNet(3,1).cuda()
     else:
         model = ResUnet(3).cuda()
 
@@ -119,7 +122,7 @@ def main(hp, num_epochs, resume, name):
             # prob_map = model(inputs) # last activation was a sigmoid
             # outputs = (prob_map > 0.3).float()
             outputs = model(inputs)
-            # outputs = torch.nn.functional.sigmoid(outputs)
+            outputs = torch.nn.functional.sigmoid(outputs)
 
             loss = criterion(outputs, labels)
 
@@ -226,7 +229,7 @@ def validation(valid_loader, model, criterion, logger, step):
         # prob_map = model(inputs) # last activation was a sigmoid
         # outputs = (prob_map > 0.3).float()
         outputs = model(inputs)
-        # outputs = torch.nn.functional.sigmoid(outputs)
+        outputs = torch.nn.functional.sigmoid(outputs)
 
         loss = criterion(outputs, labels)
 

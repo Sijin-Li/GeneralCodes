@@ -1,0 +1,20 @@
+train: "F:/LSJ/202201_withDing/temp/Dataset/202201datasetV2/size224/s2/train"
+valid: "F:/LSJ/202201_withDing/temp/Dataset/202201datasetV2/size224/s2/valid"
+test: "F:/LSJ/202201_withDing/temp/Dataset/202201datasetV2/size224/s2/test"
+save_path: "F:/LSJ/202201_withDing/temp/Dataset/202201datasetV2/size224/test_result"
+log: "F:/LSJ/202201_withDing/temp/Dataset/202201datasetV2/size224/logs"
+logging_step: 107
+validation_interval: 107 # Save and valid have same interval
+checkpoints: "F:/LSJ/202201_withDing/temp/Dataset/202201datasetV2/size224/checkpoints"
+listpath: "F:/LSJ/202201_withDing/temp/Dataset/202201datasetV2/size224/CSV_forLossAcc/"
+
+inputtype: "image_crop"
+targettype: "mask_crop"
+
+batch_size: 1
+lr: 0.001
+stepsize: 10 # after n steps then decrease lr
+RESNET_PLUS_PLUS: False
+UNET: True
+IMAGE_SIZE: 224
+CROP_SIZE: 224
