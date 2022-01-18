@@ -17,7 +17,7 @@ Codes here are programmed by myself and are used to simplify the processing in t
 I used UNet, ResNet, ResUNet, pix2pix before, and I'll put them here in the next few weeks.
 > * UNet
 > * ResUNet
-> > * [origin version](https://github.com/rishikksh20/ResUnet)
+> > * [origin pytorch version](https://github.com/rishikksh20/ResUnet)
 > > * [adjusted version for gully detection](https://github.com/Sijin-Li/GeneralCodes/tree/main/2generalmodel/ResUNet/Adjusted)
 > * pix2pix
 
