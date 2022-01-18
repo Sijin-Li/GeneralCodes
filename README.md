@@ -18,7 +18,10 @@ I used UNet, ResNet, ResUNet, pix2pix before, and I'll put them here in the next
 > * UNet
 > > * [UNet-Keras](https://github.com/zhixuhao/unet)
 > > * [UNet-pytorch-origin version](https://github.com/milesial/Pytorch-UNet)
+> > * [Adjusted UNet_pytorch](https://github.com/Sijin-Li/GeneralCodes/blob/main/2generalmodel/ResUNet/unet_model.py) can be found in ResUNet folder. (in train.py, adjusting the model to UNet in Line 42. The tag that can control the selection of models is in .ymal file.)
+> > * [Adjusted UNet_Keras](https://github.com/Sijin-Li/GeneralCodes/tree/main/2generalmodel/UNet_Keras/Adjusted) (will be completed in the next few days)
 > > > * using mask01_crop (background: 0, target: 1)
+
 > * ResUNet
 > > * [origin pytorch version](https://github.com/rishikksh20/ResUnet)
 > > * [adjusted version for gully detection](https://github.com/Sijin-Li/GeneralCodes/tree/main/2generalmodel/ResUNet/Adjusted)
