@@ -28,3 +28,8 @@ I used UNet, ResNet, ResUNet, pix2pix before, and I'll put them here in the next
 > > * Tips: using mask_crop (background: 0, target: 255)
 > * pix2pix
 
+# Useful repositories
+[Unet-Segmentation-Pytorch-Nest-of-Unets](https://github.com/bigmb/Unet-Segmentation-Pytorch-Nest-of-Unets)
+> pytorch
+> including UNet, RCNN-UNet,  Attention Unet, RCNN-Attention Unet and Nested UNet in Modes.py. 
+
