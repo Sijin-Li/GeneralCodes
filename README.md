@@ -27,6 +27,7 @@ I used UNet, ResNet, ResUNet, pix2pix before, and I'll put them here in the next
 > > * [adjusted version for gully detection](https://github.com/Sijin-Li/GeneralCodes/tree/main/2generalmodel/ResUNet/Adjusted)
 > > * Tips: using mask_crop (background: 0, target: 255)
 > * pix2pix
+> * [Attention UNet](https://arxiv.org/pdf/1804.03999.pdf) in [Repository](https://github.com/bigmb/Unet-Segmentation-Pytorch-Nest-of-Unets/blob/master/Models.py)
 
 # Useful repositories
 [Unet-Segmentation-Pytorch-Nest-of-Unets](https://github.com/bigmb/Unet-Segmentation-Pytorch-Nest-of-Unets)
