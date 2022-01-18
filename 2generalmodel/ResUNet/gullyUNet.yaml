@@ -9,7 +9,7 @@ checkpoints: "F:/LSJ/202201_withDing/temp/Dataset/202201datasetV2/size224/checkp
 listpath: "F:/LSJ/202201_withDing/temp/Dataset/202201datasetV2/size224/CSV_forLossAcc/"
 
 inputtype: "image_crop"
-targettype: "mask_crop"
+targettype: "mask01_crop"
 
 batch_size: 1
 lr: 0.001
