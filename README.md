@@ -24,7 +24,7 @@ I used UNet, ResNet, ResUNet, pix2pix before, and I'll put them here in the next
 
 > * ResUNet
 > > * [origin pytorch version](https://github.com/rishikksh20/ResUnet)
-> > * [adjusted version for gully detection](https://github.com/Sijin-Li/GeneralCodes/tree/main/2generalmodel/ResUNet/Adjusted)
+> > * [adjusted version for gully detection](https://github.com/Sijin-Li/GeneralCodes/tree/main/2generalmodel/ResUNet/ResUNet_AdjustedV1)
 > > > (the adjusted version1: add testing code; user can determine the learning rate, step size for the decrease of lr, validation steps, input paths and other parameters in .yaml file.)
 > > * Tips: using mask_crop (background: 0, target: 255)
 > * pix2pix
