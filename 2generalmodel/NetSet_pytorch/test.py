@@ -7,9 +7,7 @@ from torchvision import transforms
 from tqdm import tqdm
 import dataloader
 import metrics
-from res_unet import ResUnet
-from res_unet_plus import ResUnetPlusPlus
-from unet_model import UNet
+from models import ResUnet, ResUnetPlusPlus, UNet, AttU_Net
 from logger import MyWriter
 import torch
 import argparse
@@ -34,12 +32,15 @@ def main(hp, resume, name):
     save_dir = "{}/{}".format(hp.save_path, name)
     os.makedirs(save_dir, exist_ok=True)
 
-    if hp.RESNET_PLUS_PLUS:
-        model = ResUnetPlusPlus(3).cuda()
-    elif hp.UNET:
-        model = UNet(3,1).cuda()
-    else:
+    # get model
+    if hp.MODELTYPE == 'RESUNET':
         model = ResUnet(3).cuda()
+    elif hp.MODELTYPE == 'RESUNET_PLUS_PLUS':
+        model = ResUnetPlusPlus(3).cuda()
+    elif hp.MODELTYPE == 'AttU_Net':
+        model = AttU_Net(3,1).cuda()
+    else:
+        model = UNet(3,1).cuda()
 
     # loading model from checkpoints
     if resume:
