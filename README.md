@@ -15,6 +15,8 @@ Codes here are programmed by myself and are used to simplify the processing in t
 
 ### General CNNs
 I used UNet, ResNet, ResUNet, pix2pix before, and I'll put them here in the next few weeks.
+> * [Net Set](https://github.com/Sijin-Li/GeneralCodes/tree/main/2generalmodel/NetSet_pytorch)
+> > in this folder, you could use several net structure including RESUNET, RESUNET_PLUS_PLUS, UNET, AttU_Net in one train.py file. You could adjust the parameter of "MODELTYPE" in .yaml file to select different net structure.
 > * UNet
 > > * [UNet-Keras](https://github.com/zhixuhao/unet)
 > > * [UNet-pytorch-origin version](https://github.com/milesial/Pytorch-UNet)
