@@ -1,0 +1,281 @@
+import warnings
+
+warnings.simplefilter("ignore", (UserWarning, FutureWarning))
+from hparams import HParam
+from torch.utils.data import DataLoader
+from torchvision import transforms
+from tqdm import tqdm
+import dataloader
+import metrics
+from models import ResUnet, ResUnetPlusPlus, UNet, AttU_Net
+from logger import MyWriter
+import torch
+import argparse
+import os
+import csv
+
+
+def main(hp, num_epochs, resume, name):
+
+    Train_Loss_list = []
+    Train_Accuracy_list = []
+    Train_epoch = []
+    Valid_Loss_list = []
+    Valid_Accuracy_list = []
+    Valid_epoch = []
+
+    shadow_weight = hp.shadow_weight
+
+    checkpoint_dir = "{}/{}".format(hp.checkpoints, name)
+    os.makedirs(checkpoint_dir, exist_ok=True)
+
+    os.makedirs("{}/{}".format(hp.log, name), exist_ok=True)
+    writer = MyWriter("{}/{}".format(hp.log, name))
+
+    list_dir = "{}/{}".format(hp.listpath, name)
+    os.makedirs(list_dir, exist_ok=True)
+    
+    # get model
+    if hp.MODELTYPE == 'RESUNET':
+        model = ResUnet(3).cuda()
+    elif hp.MODELTYPE == 'RESUNET_PLUS_PLUS':
+        model = ResUnetPlusPlus(3).cuda()
+    elif hp.MODELTYPE == 'AttU_Net':
+        model = AttU_Net(3,1).cuda()
+    else:
+        model = UNet(3,1).cuda()
+
+    # set up binary cross entropy and dice loss
+    # set mask loss
+    criterion = metrics.BCEDiceLoss_maskloss()
+
+    # optimizer
+    # optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum, nesterov=True)
+    optimizer = torch.optim.Adam(model.parameters(), lr=hp.lr, weight_decay=1e-5)
+    # optimizer = torch.optim.Adam(model.parameters(), lr=hp.lr)
+
+    # decay LR
+    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=hp.stepsize, gamma=0.1)
+
+    # starting params
+    best_loss = 999
+    start_epoch = 0
+    # optionally resume from a checkpoint
+    if resume:
+        if os.path.isfile(resume):
+            print("=> loading checkpoint '{}'".format(resume))
+            checkpoint = torch.load(resume)
+
+            start_epoch = checkpoint["epoch"]
+
+            best_loss = checkpoint["best_loss"]
+            model.load_state_dict(checkpoint["state_dict"])
+            # optimizer.load_state_dict(checkpoint["optimizer"])
+            print(
+                "=> loaded checkpoint '{}' (epoch {})".format(
+                    resume, checkpoint["epoch"]
+                )
+            )
+        else:
+            print("=> no checkpoint found at '{}'".format(args.resume))
+
+    # get data
+    mass_dataset_train = dataloader.ImageDataset(
+        hp, transform=transforms.Compose([dataloader.ToTensorTarget()])
+    )
+
+    mass_dataset_val = dataloader.ImageDataset(
+        hp, train=False, test=False, transform=transforms.Compose([dataloader.ToTensorTarget()])
+    )
+
+    # creating loaders
+    train_dataloader = DataLoader(
+        mass_dataset_train, batch_size=hp.batch_size, num_workers=2, shuffle=True
+    )
+    val_dataloader = DataLoader(
+        mass_dataset_val, batch_size=1, num_workers=2, shuffle=False
+    )
+
+    step = 0
+    for epoch in range(start_epoch, num_epochs):
+        print("Epoch {}/{}".format(epoch, num_epochs - 1))
+        print("-" * 10)
+
+        # step the learning rate scheduler
+        lr_scheduler.step()
+
+        # run training and validation
+        # logging accuracy and loss
+        train_acc = metrics.MetricTracker()
+        train_loss = metrics.MetricTracker()
+        # iterate over data
+
+        loader = tqdm(train_dataloader, desc="training")
+        for idx, data in enumerate(loader):
+
+            # get the inputs and wrap in Variable
+            inputs = data["sat_img"].cuda()
+            labels = data["map_img"].cuda()
+            shadows = data["shd_img"].cuda()
+            invshadows = data["inv_img"].cuda()
+
+            # zero the parameter gradients
+            optimizer.zero_grad()
+
+            # forward
+            # prob_map = model(inputs) # last activation was a sigmoid
+            # outputs = (prob_map > 0.3).float()
+            outputs = model(inputs)
+            outputs = torch.nn.functional.sigmoid(outputs)
+
+            # calculate mask loss
+            loss = criterion(outputs, labels, shadows, invshadows, shadow_weight)
+
+            # backward
+            loss.backward()
+            optimizer.step()
+
+            train_acc.update(metrics.dice_coeff(outputs, labels), outputs.size(0))
+            train_loss.update(loss.data.item(), outputs.size(0))
+
+            # tensorboard logging
+            if step % hp.logging_step == 0:
+                writer.log_training(train_loss.avg, train_acc.avg, step)
+                loader.set_description(
+                    "Training Loss: {:.4f} Acc: {:.4f}".format(
+                        train_loss.avg, train_acc.avg
+                    )
+                )
+            Train_Loss_list.append(train_loss.avg)
+            Train_Accuracy_list.append(train_acc.avg)
+            Train_epoch.append(step)
+
+            # Validatiuon
+            if step % hp.validation_interval == 0:
+                valid_metrics = validation(
+                    val_dataloader, model, criterion, writer, step, shadow_weight
+                )
+                save_path = os.path.join(
+                    checkpoint_dir, "%s_checkpoint_%04d.pt" % (name, step)
+                )
+                best_loss = min(valid_metrics["valid_loss"], best_loss)
+                torch.save(
+                    {
+                        "step": step,
+                        "epoch": epoch,
+                        "arch": "ResUnet",
+                        "state_dict": model.state_dict(),
+                        "best_loss": best_loss,
+                        "optimizer": optimizer.state_dict(),
+                    },
+                    save_path,
+                )
+                # store best loss and save a model checkpoint
+                if valid_metrics["valid_loss"] < best_loss:
+                  best_loss = min(valid_metrics["valid_loss"], best_loss)
+                  torch.save(
+                      {
+                          "step": step,
+                          "epoch": epoch,
+                          "arch": "ResUnet",
+                          "state_dict": model.state_dict(),
+                          "best_loss": best_loss,
+                          "optimizer": optimizer.state_dict(),
+                      },
+                      save_path,
+                  )
+                Valid_Loss_list.append(valid_metrics["valid_loss"])
+                Valid_Accuracy_list.append(valid_metrics["valid_acc"])
+                Valid_epoch.append(step)
+                print("Saved checkpoint to: %s" % save_path)
+
+            step += 1
+    torch.save(
+          {
+              "step": step,
+              "epoch": epoch,
+              "arch": "ResUnet",
+              "state_dict": model.state_dict(),
+              "best_loss": best_loss,
+              "optimizer": optimizer.state_dict(),
+          },
+          save_path,
+      )
+    rows1 = zip(Train_epoch,Train_Loss_list,Train_Accuracy_list)
+    with open(os.path.join(hp.listpath,name,'train.csv'), "w") as f:
+      writer = csv.writer(f)
+      for row in rows1:
+          writer.writerow(row)
+
+    rows2 = zip(Valid_epoch,Valid_Loss_list,Valid_Accuracy_list)
+    with open(os.path.join(hp.listpath,name,'valid.csv'), "w") as f:
+      writer = csv.writer(f)
+      for row in rows2:
+          writer.writerow(row)
+
+
+def validation(valid_loader, model, criterion, logger, step, shadow_weight):
+
+    # logging accuracy and loss
+    valid_acc = metrics.MetricTracker()
+    valid_loss = metrics.MetricTracker()
+
+    # switch to evaluate mode
+    model.eval()
+
+    # Iterate over data.
+    for idx, data in enumerate(tqdm(valid_loader, desc="validation")):
+
+        # get the inputs and wrap in Variable
+        inputs = data["sat_img"].cuda()
+        labels = data["map_img"].cuda()
+        shadows = data["shd_img"].cuda()
+        invshadows = data["inv_img"].cuda()
+
+        # forward
+        # prob_map = model(inputs) # last activation was a sigmoid
+        # outputs = (prob_map > 0.3).float()
+        outputs = model(inputs)
+        outputs = torch.nn.functional.sigmoid(outputs)
+
+        loss = criterion(outputs, labels, shadows, invshadows, shadow_weight)
+
+        valid_acc.update(metrics.dice_coeff(outputs, labels), outputs.size(0))
+        valid_loss.update(loss.data.item(), outputs.size(0))
+        if idx == 0:
+            logger.log_images(inputs.cpu(), labels.cpu(), outputs.cpu(), step)
+    logger.log_validation(valid_loss.avg, valid_acc.avg, step)
+
+    print("Validation Loss: {:.4f} Acc: {:.4f}".format(valid_loss.avg, valid_acc.avg))
+    model.train()
+    return {"valid_loss": valid_loss.avg, "valid_acc": valid_acc.avg}
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Road and Building Extraction")
+    parser.add_argument(
+        "-c", "--config", type=str, required=True, help="yaml file for configuration"
+    )
+    parser.add_argument(
+        "--epochs",
+        default=75,
+        type=int,
+        metavar="N",
+        help="number of total epochs to run",
+    )
+    parser.add_argument(
+        "--resume",
+        default="",
+        type=str,
+        metavar="PATH",
+        help="path to latest checkpoint (default: none)",
+    )
+    parser.add_argument("--name", default="default", type=str, help="Experiment name")
+
+    args = parser.parse_args()
+
+    hp = HParam(args.config)
+    with open(args.config, "r") as f:
+        hp_str = "".join(f.readlines())
+
+    main(hp, num_epochs=args.epochs, resume=args.resume, name=args.name)
