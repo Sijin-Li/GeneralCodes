@@ -1,0 +1,11 @@
+1. .ymal 中定义阴影和非阴影区域的路径
+2. dataloader.py中，设置读入shadow 和 invshadow（阴影和非引用区域），
+***** 注意！***** 
+由于此两类文件值为0和255，故需要对其进行归一化，在函数中，分别对其除以255（否则无法计算loss）
+***** 注意！***** 
+3. metrics.py中，设置新的BCEDiceLoss函数
+（1）首先，读入shadow 和 invshadow，读入权重
+（2）分别计算阴影和非阴影区域的bceloss和diceloss，然后相加，并乘以权重（阴影权重为shadow_weight，非阴影区域权重为1-shadow_weight）
+4. train.py中，在train和validation过程中分别更改loss的计算
+（1）更改criterion指向的函数
+（2）更改loss=criterion(parameters)括号中的参数设置

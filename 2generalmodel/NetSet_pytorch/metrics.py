@@ -26,8 +26,8 @@ class BCEDiceLoss_maskloss(nn.Module):
     def forward(self, input, target, shadow, invshadow, shdweight = 0.5):
         pred = input.view(-1)
         truth = target.view(-1)
-        shd = shadow.view(-1) / 255
-        invshd = invshadow.view(-1) / 255
+        shd = shadow.view(-1)
+        invshd = invshadow.view(-1)
         invshdweight = 1 - shdweight
 
         # BCE loss
