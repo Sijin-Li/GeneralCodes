@@ -126,7 +126,7 @@ def main(hp, num_epochs, resume, name):
             # prob_map = model(inputs) # last activation was a sigmoid
             # outputs = (prob_map > 0.3).float()
             outputs = model(inputs)
-            outputs = torch.nn.functional.sigmoid(outputs)
+            # outputs = torch.nn.functional.sigmoid(outputs)
 
             loss = criterion(outputs, labels, shadows, invshadows, shadow_weight)
 
@@ -235,7 +235,7 @@ def validation(valid_loader, model, criterion, logger, step, shadow_weight):
         # prob_map = model(inputs) # last activation was a sigmoid
         # outputs = (prob_map > 0.3).float()
         outputs = model(inputs)
-        outputs = torch.nn.functional.sigmoid(outputs)
+        # outputs = torch.nn.functional.sigmoid(outputs)
 
         loss = criterion(outputs, labels, shadows, invshadows, shadow_weight)
 
