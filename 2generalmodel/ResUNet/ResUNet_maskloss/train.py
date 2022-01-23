@@ -47,7 +47,7 @@ def main(hp, num_epochs, resume, name):
         model = ResUnet(3).cuda()
 
     # set up binary cross entropy and dice loss
-    if hp.MASKLOSS is Trus:
+    if hp.MASKLOSS is True:
         criterion = metrics.BCEDiceLoss_maskloss()
     else:
         criterion = metrics.BCEDiceLoss()
