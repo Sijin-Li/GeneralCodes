@@ -37,9 +37,9 @@ def main(hp, num_epochs, resume, name):
     
     # get model
     if hp.MODELTYPE == 'RESUNET':
-        model = ResUnet(3).cuda()
+        model = ResUnet(3,1).cuda()
     elif hp.MODELTYPE == 'RESUNET_PLUS_PLUS':
-        model = ResUnetPlusPlus(3).cuda()
+        model = ResUnetPlusPlus(3,1).cuda()
     elif hp.MODELTYPE == 'AttU_Net':
         model = AttU_Net(3,1).cuda()
     else:

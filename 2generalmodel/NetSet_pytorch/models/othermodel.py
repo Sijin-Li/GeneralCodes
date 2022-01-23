@@ -80,7 +80,7 @@ class U_Net(nn.Module):
 
         self.Conv = nn.Conv2d(filters[0], out_ch, kernel_size=1, stride=1, padding=0)
 
-       # self.active = torch.nn.Sigmoid()
+        self.active = torch.nn.Sigmoid()
 
     def forward(self, x):
 
@@ -117,7 +117,7 @@ class U_Net(nn.Module):
 
         out = self.Conv(d2)
 
-        #d1 = self.active(out)
+        out = self.active(out)
 
         return out
 
@@ -207,7 +207,7 @@ class R2U_Net(nn.Module):
 
         self.Conv = nn.Conv2d(filters[0], output_ch, kernel_size=1, stride=1, padding=0)
 
-       # self.active = torch.nn.Sigmoid()
+        self.active = torch.nn.Sigmoid()
 
 
     def forward(self, x):
@@ -244,7 +244,7 @@ class R2U_Net(nn.Module):
 
         out = self.Conv(d2)
 
-      # out = self.active(out)
+        out = self.active(out)
 
         return out
 
@@ -324,7 +324,7 @@ class AttU_Net(nn.Module):
 
         self.Conv = nn.Conv2d(filters[0], output_ch, kernel_size=1, stride=1, padding=0)
 
-        #self.active = torch.nn.Sigmoid()
+        self.active = torch.nn.Sigmoid()
 
 
     def forward(self, x):
@@ -367,7 +367,7 @@ class AttU_Net(nn.Module):
 
         out = self.Conv(d2)
 
-      #  out = self.active(out)
+        out = self.active(out)
 
         return out
 
@@ -412,7 +412,7 @@ class R2AttU_Net(nn.Module):
 
         self.Conv = nn.Conv2d(filters[0], out_ch, kernel_size=1, stride=1, padding=0)
 
-       # self.active = torch.nn.Sigmoid()
+        self.active = torch.nn.Sigmoid()
 
 
     def forward(self, x):
@@ -453,7 +453,7 @@ class R2AttU_Net(nn.Module):
 
         out = self.Conv(d2)
 
-      #  out = self.active(out)
+        out = self.active(out)
 
         return out
 

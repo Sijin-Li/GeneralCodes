@@ -10,11 +10,11 @@ from .modules import (
 
 
 class ResUnetPlusPlus(nn.Module):
-    def __init__(self, channel, filters=[32, 64, 128, 256, 512]):
+    def __init__(self, in_channel, out_channel, filters=[32, 64, 128, 256, 512]):
         super(ResUnetPlusPlus, self).__init__()
 
         self.input_layer = nn.Sequential(
-            nn.Conv2d(channel, filters[0], kernel_size=3, padding=1),
+            nn.Conv2d(in_channel, filters[0], kernel_size=3, padding=1),
             nn.BatchNorm2d(filters[0]),
             nn.ReLU(),
             nn.Conv2d(filters[0], filters[0], kernel_size=3, padding=1),
@@ -51,7 +51,7 @@ class ResUnetPlusPlus(nn.Module):
 
         self.aspp_out = ASPP(filters[1], filters[0])
 
-        self.output_layer = nn.Sequential(nn.Conv2d(filters[0], 3, 1), nn.Sigmoid())
+        self.output_layer = nn.Sequential(nn.Conv2d(filters[0], out_channel, 1), nn.Sigmoid())
 
     def forward(self, x):
         x1 = self.input_layer(x) + self.input_skip(x)
