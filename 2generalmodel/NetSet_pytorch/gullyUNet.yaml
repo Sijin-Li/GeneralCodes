@@ -13,6 +13,7 @@ targettype: "mask01_crop"
 shadowtype: "shadow_crop"
 invshadowtype: "invshadow_crop"
 shadow_weight: 0.3
+MASKLOSS: True
 
 batch_size: 1
 lr: 0.001

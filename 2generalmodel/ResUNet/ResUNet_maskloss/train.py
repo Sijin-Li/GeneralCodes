@@ -47,7 +47,10 @@ def main(hp, num_epochs, resume, name):
         model = ResUnet(3).cuda()
 
     # set up binary cross entropy and dice loss
-    criterion = metrics.BCEDiceLoss_maskloss()
+    if hp.MASKLOSS is Trus:
+        criterion = metrics.BCEDiceLoss_maskloss()
+    else:
+        criterion = metrics.BCEDiceLoss()
 
     # optimizer
     # optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum, nesterov=True)

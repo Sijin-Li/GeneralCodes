@@ -9,3 +9,5 @@
 4. train.py中，在train和validation过程中分别更改loss的计算
 （1）更改criterion指向的函数
 （2）更改loss=criterion(parameters)括号中的参数设置
+5. .yaml文件中 MASKLOSS 控制是否使用mask loss
+# 目前无法运行mask loss=False
