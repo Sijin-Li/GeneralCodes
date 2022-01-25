@@ -205,8 +205,9 @@ def cliptopatch(inputData, ori_geoTrans, ori_geoPro, saveName, offsetCor, patchS
 '''
 单独保存函数
 gdal 保存为tif
+oriPara = [band, datatype, geoTrans, geoPro]
 '''
-def writeTifffile(out_band, saveName):
+def writeTifffile(out_band, oriPara, saveName):
     # 设置DataType
     if 'int8' in out_band.dtype.name:
         newDataType = gdal.GDT_Byte
@@ -229,11 +230,11 @@ def writeTifffile(out_band, saveName):
 
     # 创建gtiff 并 写入
     driver = gdal.GetDriverByName("GTiff")
-    dataset = driver.Create(saveName, patchSize, patchSize, oriPara(0), newDataType)
+    dataset = driver.Create(saveName, im_height, im_width, im_bands, newDataType)
     if (dataset != None):
-        dataset.SetGeoTransform(dst_transform)  # 写入仿射变换参数
-        dataset.SetProjection(oriPara(3))  # 写入投影
-    for i in range(oriPara(0)):
+        dataset.SetGeoTransform(oriPara[2])  # 写入仿射变换参数
+        dataset.SetProjection(oriPara[3])  # 写入投影
+    for i in range(im_bands):
         dataset.GetRasterBand(i + 1).WriteArray(out_band[:, :, i])
     del dataset
 

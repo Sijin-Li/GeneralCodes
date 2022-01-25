@@ -14,8 +14,7 @@ import os
 import copy
 import imageio
 import cv2
-
-from TiffReadClipWrite import write_to_disk
+from General.TiffReadClipWrite import write_to_disk
 
 
 def concate_samples(sample1, sample2, savepath, filename):

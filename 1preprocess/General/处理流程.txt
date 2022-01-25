@@ -1,0 +1,4 @@
+1. read & clip to small patch
+2. training & testing
+3. write spatial reference to results
+4. GDAL mosaic（文件夹最后一个为合并的完整图）
