@@ -7,7 +7,7 @@ from torchvision import transforms
 from tqdm import tqdm
 import dataloader
 import metrics
-from models import ResUnet, ResUnetPlusPlus, UNet, AttU_Net, AttU_NetwithoutConcat
+from models import ResUnet, ResUnetPlusPlus, UNet, AttU_Net, AttU_NetwithoutConcat, AttU_Netwithoutpool
 from logger import MyWriter
 import torch
 import argparse
@@ -41,6 +41,8 @@ def main(hp, resume, name):
         model = AttU_Net(3,1).cuda()
     elif hp.MODELTYPE == 'AttU_Netwc':
         model = AttU_NetwithoutConcat(3, 1).cuda()
+    elif hp.MODELTYPE == 'AttU_Netwp':
+        model = AttU_Netwithoutpool(3, 1).cuda()
     else:
         model = UNet(3,1).cuda()
 

@@ -18,6 +18,6 @@ MASKLOSS: True
 batch_size: 1
 lr: 0.001
 stepsize: 10 # after n steps then decrease lr
-MODELTYPE: AttU_Netwc # RESUNET, RESUNET_PLUS_PLUS, UNET, AttU_Net, AttU_Netwc
+MODELTYPE: AttU_Netwp # RESUNET, RESUNET_PLUS_PLUS, UNET, AttU_Net, AttU_Netwc, AttU_Netwp
 IMAGE_SIZE: 224
 CROP_SIZE: 224
