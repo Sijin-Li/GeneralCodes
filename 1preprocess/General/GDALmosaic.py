@@ -5,16 +5,18 @@ import os
 
 
 if __name__ == "__main__":
-    classname = 'attU_dV3_t3_4922_weight001_SpaRef'
-    orifilePath = "E:/Dataset/202101_withDinghu/temp/Result/GullyDetecAttUnet/"+classname+"/W0_0_0.tif"
+    classname = 'GUN_dV3_t1_280epochs'
+    orifilePath = 'E:/Dataset/202101_withDinghu/temp/Result/mosaic-UNet/result_dV3/'+classname+'/W0_0_0.tif'  # Keras
+    #"E:/Dataset/202101_withDinghu/temp/Result/GullyDetecAttUnet/"+classname+"/W0_0_0.tif"  # pytorch
 
     tempfilePath = orifilePath
 
-    outputPath = 'E:/Dataset/202101_withDinghu/temp/Result/GullyDetecAttUnet/RasterMosaic/'+classname+'/'
+    outputPath = 'E:/Dataset/202101_withDinghu/temp/Result/mosaic-UNet/mosaic_result_dV3/'+classname+'/'  # Keras
+    #'E:/Dataset/202101_withDinghu/temp/Result/GullyDetecAttUnet/RasterMosaic/'+classname+'/' # pytorch
     os.makedirs(outputPath, exist_ok=True)
     j=0
 
-    inputPath = 'E:/Dataset/202101_withDinghu/temp/Result/GullyDetecAttUnet/attU_dV3_t2_4494_weight03_SpaRef/'
+    inputPath = 'E:/Dataset/202101_withDinghu/temp/Result/mosaic-UNet/result_dV3/'+classname+'/'
 
     from_names = glob.glob(os.path.join(inputPath, "*.tif"))
     for i in range(len(from_names)):

@@ -221,7 +221,8 @@ def writeTifffile(out_band, oriPara, saveName):
         im_height, im_width, im_bands = out_band.shape
         # print('1',out_band.shape)
     elif len(out_band.shape) == 2:
-        out_band = np.array([out_band])
+        im_height, im_width = out_band.shape
+        # out_band = np.array([out_band])
         im_bands = 1
         # print('2',out_band.shape)
     else:
