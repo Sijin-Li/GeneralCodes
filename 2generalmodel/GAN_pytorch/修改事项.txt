@@ -1,0 +1,18 @@
+基于pix2pix
+
+1. 使用之前的dataloader替换datasets 
+# 分别读取两个文件夹中的数据，而不需要把两个文件夹的文件相连
+2. 构建test.py
+# 源代码中无测试代码
+3. 加lr递减 完成
+
+
+python pix2pix.py --n_epochs 160 --dataset_name GANpatches --lr 0.00001 --sample_interval 948 --task_name Test4  --decay_epoch 80 --checkpoint_interval 5
+
+ResUnet
+
+UNet
+Test1 --n_epochs 100 --dataset_name GANpatches --lr 0.0001 --sample_interval 948 --task_name Test1  --decay_epoch 20 --checkpoint_interval 5 （gamma 0.1）
+Test2 --n_epochs 100 --dataset_name GANpatches --lr 0.00001 --sample_interval 948 --task_name Test2  --decay_epoch 30 --checkpoint_interval 5
+Test3 --n_epochs 100 --dataset_name GANpatches --lr 0.000001 --sample_interval 948 --task_name Test3  --decay_epoch 80 --checkpoint_interval 5
+Test4 --n_epochs 160 --dataset_name GANpatches --lr 0.00001 --sample_interval 948 --task_name Test4  --decay_epoch 80 --checkpoint_interval 5
