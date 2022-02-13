@@ -57,10 +57,10 @@ class GeneratorUNet(nn.Module):
         super(GeneratorUNet, self).__init__()
 
         self.down1 = UNetDown(in_channels, 64, normalize=False) # 224->112
-        self.down2 = UNetDown(64, 128) # 112->64
-        self.down3 = UNetDown(128, 256) # 64->32
-        self.down4 = UNetDown(256, 512, dropout=0.5) # 32->16
-        self.down5 = UNetDown(512, 512, dropout=0.5) # 16->8
+        self.down2 = UNetDown(64, 128) # 112->56
+        self.down3 = UNetDown(128, 256) # 56->28
+        self.down4 = UNetDown(256, 512, dropout=0.5) # 28->14
+        self.down5 = UNetDown(512, 512, dropout=0.5) # 14->7
         # self.down6 = UNetDown(512, 512, dropout=0.5)
         # self.down7 = UNetDown(512, 512, dropout=0.5)
         # self.down8 = UNetDown(512, 512, normalize=False, dropout=0.5)
