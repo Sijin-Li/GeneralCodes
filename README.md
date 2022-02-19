@@ -15,7 +15,7 @@ Codes here are programmed by myself and are used to simplify the processing in t
 > * transfer RGB images to HSV and segment shadows according a threshold in V band. (for the gully detection based on UAV images with a large areas of shadows) [ShadowExtraction.py](https://github.com/Sijin-Li/GeneralCodes/blob/main/1preprocess/General/ShadowExtraction.py)
 > * mosaic small patches into complete image through GDAL. [GDALmosaic.py](https://github.com/Sijin-Li/GeneralCodes/blob/main/1preprocess/General/GDALmosaic.py)
 > * read spatial reference in original imagery and write it in target imagery. [WriteSpatialReference.py](https://github.com/Sijin-Li/GeneralCodes/blob/main/1preprocess/General/WriteSpatialReference.py)
-> * read .pt(h) model file and transfer it to other type of models (.h5/.onnx) [TransforPTtoothermodel.py](https://github.com/Sijin-Li/GeneralCodes/blob/main/1preprocess/General/TransforPTtoothermodel.py
+> * read .pt(h) model file and transfer it to other type of models (.h5/.onnx) [TransforPTtoothermodel.py](https://github.com/Sijin-Li/GeneralCodes/blob/main/1preprocess/General/TransforPTtoothermodel.py)
 
 
 ### General CNNs
