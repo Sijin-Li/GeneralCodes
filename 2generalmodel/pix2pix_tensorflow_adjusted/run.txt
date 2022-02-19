@@ -1,0 +1,14 @@
+# 将generator改为ResUNet keras==2.1.6
+
+size 224
+python pix2pix.py --mode train --output_dir saver/saverT1 --lr 0.0001 --max_epochs 400 --input_dir E:/lsj/TerrainUnderstanding/202202datasetV1_256/wangmaogou/selectedpatch/train/basicIS_crop
+--checkpoint saver/saver1
+size 256
+python pix2pix.py --mode train --output_dir saver/saver4 --lr 0.0001 --max_epochs 600 --input_dir E:/lsj/TerrainUnderstanding/pix2pix-tensorflow-master/dataset/v1/train/IandS/ 
+
+python pix2pix.py  --mode test --output_dir result/result3 --input_dir  E:/lsj/TerrainUnderstanding/202112withDinghu/GullyDetection/202201datasetV3/size224/s2/train/GANpatches/   --checkpoint saver/saver3
+
+saver1  --max_epochs 400 --lr 0.0002
+saver2  --max_epochs 600 --lr 0.0001
+saver3  --max_epochs 400 --lr 0.0001 test training
+saver4
