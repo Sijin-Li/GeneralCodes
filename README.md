@@ -38,5 +38,12 @@ I used UNet, ResNet, ResUNet, pix2pix before, and I'll put them here in the next
 # Useful repositories
 [Unet-Segmentation-Pytorch-Nest-of-Unets](https://github.com/bigmb/Unet-Segmentation-Pytorch-Nest-of-Unets)
 > pytorch
-> including UNet, RCNN-UNet,  Attention Unet, RCNN-Attention Unet and Nested UNet in Modes.py. 
-
+> including UNet, RCNN-UNet,  Attention Unet, RCNN-Attention Unet and Nested UNet in Models.py. 
+[UNet Zoon](https://github.com/Andy-zhujunwen/UNET-ZOO)
+> in pytorch
+[GAN Zoo](https://github.com/hindupuravinash/the-gan-zoo)
+> a collection of GAN repositories.
+[GAN Zoo Pytorch version](https://github.com/eriklindernoren/PyTorch-GAN)
+> All GAN completed by pytorch.
+[FFT network](https://github.com/JamieGainer/NN_for_FFT_Autoencoded_MNIST)
+> I am not clear about it now.
