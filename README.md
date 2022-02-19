@@ -30,8 +30,8 @@ I used UNet, ResNet, ResUNet, pix2pix before, and I'll put them here in the next
 > > > (the adjusted version1: add testing code; user can determine the learning rate, step size for the decrease of lr, validation steps, input paths and other parameters in .yaml file.)
 > > * Tips: using mask_crop (background: 0, target: 255)
 > * pix2pix
-> > [keras verison](https://github.com/Sijin-Li/GeneralCodes/tree/main/2generalmodel/pix2pix_keras_adjusted)
-> > [tensorflow version](https://github.com/Sijin-Li/GeneralCodes/tree/main/2generalmodel/pix2pix_tensorflow_adjusted)
+> > * [keras verison](https://github.com/Sijin-Li/GeneralCodes/tree/main/2generalmodel/pix2pix_keras_adjusted)
+> > * [tensorflow version](https://github.com/Sijin-Li/GeneralCodes/tree/main/2generalmodel/pix2pix_tensorflow_adjusted)
 > > > I will focus on this repo in the next few weeks. in the current version, I rewrote the generator structure and used ResUNet (in keras Model) as the generator. The discriminator has not been changed until now.
 > * [Attention UNet](https://arxiv.org/pdf/1804.03999.pdf) in [Repository](https://github.com/bigmb/Unet-Segmentation-Pytorch-Nest-of-Unets/blob/master/Models.py)
 
