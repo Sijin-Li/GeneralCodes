@@ -12,6 +12,11 @@ Codes here are programmed by myself and are used to simplify the processing in t
 > * clipping the complete file to small patches [TiffReadClipWrite.py](https://github.com/Sijin-Li/GeneralCodes/blob/main/1preprocess/General/TiffReadClipWrite.py)
 > * selecting specific files according to user requirements and moving them to a new path [SelectPatch.py](https://github.com/Sijin-Li/GeneralCodes/blob/main/1preprocess/General/SelectPatch.py)
 > * producing training patches with special data types (such as samples for pix2pix which needs concatenating two individual samples) [ConcatenateSamples.py](https://github.com/Sijin-Li/GeneralCodes/blob/main/1preprocess/General/ConcatenateSamples.py)
+> * transfer RGB images to HSV and segment shadows according a threshold in V band. (for the gully detection based on UAV images with a large areas of shadows) [ShadowExtraction.py](https://github.com/Sijin-Li/GeneralCodes/blob/main/1preprocess/General/ShadowExtraction.py)
+> * mosaic small patches into complete image through GDAL. [GDALmosaic.py](https://github.com/Sijin-Li/GeneralCodes/blob/main/1preprocess/General/GDALmosaic.py)
+> * read spatial reference in original imagery and write it in target imagery. [WriteSpatialReference.py](https://github.com/Sijin-Li/GeneralCodes/blob/main/1preprocess/General/WriteSpatialReference.py)
+> * read .pt(h) model file and transfer it to other type of models (.h5/.onnx) [TransforPTtoothermodel.py](https://github.com/Sijin-Li/GeneralCodes/blob/main/1preprocess/General/TransforPTtoothermodel.py)
+
 
 ### General CNNs
 I used UNet, ResNet, ResUNet, pix2pix before, and I'll put them here in the next few weeks.
@@ -30,10 +35,24 @@ I used UNet, ResNet, ResUNet, pix2pix before, and I'll put them here in the next
 > > > (the adjusted version1: add testing code; user can determine the learning rate, step size for the decrease of lr, validation steps, input paths and other parameters in .yaml file.)
 > > * Tips: using mask_crop (background: 0, target: 255)
 > * pix2pix
+> > * [keras verison](https://github.com/Sijin-Li/GeneralCodes/tree/main/2generalmodel/pix2pix_keras_adjusted)
+> > * [tensorflow version](https://github.com/Sijin-Li/GeneralCodes/tree/main/2generalmodel/pix2pix_tensorflow_adjusted)
+> > > I will focus on this repo in the next few weeks. in the current version, I rewrote the generator structure and used ResUNet (in keras Model) as the generator. The discriminator has not been changed until now.
 > * [Attention UNet](https://arxiv.org/pdf/1804.03999.pdf) in [Repository](https://github.com/bigmb/Unet-Segmentation-Pytorch-Nest-of-Unets/blob/master/Models.py)
 
 # Useful repositories
 [Unet-Segmentation-Pytorch-Nest-of-Unets](https://github.com/bigmb/Unet-Segmentation-Pytorch-Nest-of-Unets)
 > pytorch
-> including UNet, RCNN-UNet,  Attention Unet, RCNN-Attention Unet and Nested UNet in Modes.py. 
-
+> including UNet, RCNN-UNet,  Attention Unet, RCNN-Attention Unet and Nested UNet in Models.py. 
+> 
+[UNet Zoon](https://github.com/Andy-zhujunwen/UNET-ZOO)
+> in pytorch
+> 
+[GAN Zoo](https://github.com/hindupuravinash/the-gan-zoo)
+> a collection of GAN repositories.
+> 
+[GAN Zoo Pytorch version](https://github.com/eriklindernoren/PyTorch-GAN)
+> All GAN completed by pytorch.
+> 
+[FFT network](https://github.com/JamieGainer/NN_for_FFT_Autoencoded_MNIST)
+> I am not clear about it now.
