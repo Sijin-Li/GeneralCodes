@@ -60,24 +60,28 @@ def readtiff2array(oriPath):
 16bit to 8bit
 for slope data, nodata value = 91, therefore we need to find a maximum except 91 and view it as the max_16bit
 '''
-
-
-def transfer_16bit_to_8bit(data, isSlope, nodatavalue=91):
+def transfer_16bit_to_8bit(data, isSlope=False, isDEM=False, nodatavalue=91):
     # transform to 8bit
-    min_16bit = 0
-    max_16bit = 0
+
+
+    # 以下两部分主要是为了处理无效值，要将无效值区域调至max
+
+    ## slope 数据中无效值被设置为了91
     if isSlope is True:
+
+        min_16bit = 50000
+        max_16bit = 0
 
         # 先对有效值区域进行处理，找到有效值的最大最小值
         ## 找到有效值的所有索引
-        indexLS = np.argwhere(data < nodatavalue)
+        indexLS = np.argwhere(data<nodatavalue)
         ## indexLS为tuple，shape=[n,3],n代表有多少行
         ## 具体在图像中的坐标为 indexLS.shape[0][0], indexLS.shape[0][1]
         rows = indexLS.shape[0]
         i = 0
         for i in range(rows):
             ## 找到其临时值
-            tempValue = data[indexLS[i][0], indexLS[i][1], 0]
+            tempValue = data[indexLS[i][0],indexLS[i][1],0]
             ## 对临时值进行判断
             if tempValue != 91:
                 if tempValue > max_16bit:
@@ -85,13 +89,45 @@ def transfer_16bit_to_8bit(data, isSlope, nodatavalue=91):
                 elif tempValue < min_16bit:
                     min_16bit = tempValue
 
-                    # 进而对无效值（通常为91）进行处理，思路为将其改为最大值+最大值的10%
+        # 进而对无效值（通常为91）进行处理，思路为将其改为最大值+最大值的10%
         # 循环过程与上一步类似
-        indexGE = np.argwhere(data >= nodatavalue)
+        indexGE = np.argwhere(data>=nodatavalue)
         rows = indexGE.shape[0]
         i = 0
         for i in range(rows):
-            data[indexGE[i][0], indexGE[i][1], 0] = max_16bit  # + max_16bit*0.1
+            data[indexGE[i][0],indexGE[i][1],0] = max_16bit #+ max_16bit*0.1
+        print(max_16bit, min_16bit)
+
+    ## dem数据中无效值被设置为了0
+    elif isDEM is True:
+        nodatavalue = 0
+        min_16bit = 50000
+        max_16bit = 0
+
+        # 先对有效值区域进行处理，找到有效值的最大最小值
+        ## 找到有效值的所有索引
+        indexGS = np.argwhere(data>nodatavalue)
+        ## indexGS为tuple，shape=[n,3],n代表有多少行
+        ## 具体在图像中的坐标为 indexLS.shape[0][0], indexLS.shape[0][1]
+        rows = indexGS.shape[0]
+        i = 0
+        for i in range(rows):
+            ## 找到其临时值
+            tempValue = data[indexGS[i][0],indexGS[i][1],0]
+            ## 对临时值进行判断
+            if tempValue != 0:
+                if tempValue > max_16bit:
+                    max_16bit = tempValue
+                elif tempValue < min_16bit:
+                    min_16bit = tempValue
+
+        # 进而对无效值（通常为0）进行处理，思路为将其改为最大值+最大值的10%
+        # 循环过程与上一步类似
+        indexLE = np.argwhere(data<=nodatavalue)
+        rows = indexLE.shape[0]
+        i = 0
+        for i in range(rows):
+            data[indexLE[i][0],indexLE[i][1],0] = max_16bit #+ max_16bit*0.1
         print(max_16bit, min_16bit)
     else:
         min_16bit = np.min(data)
@@ -99,13 +135,9 @@ def transfer_16bit_to_8bit(data, isSlope, nodatavalue=91):
 
     data_8bit = np.array(np.rint(255 * ((data - min_16bit) / (max_16bit - min_16bit))), dtype=np.uint8)
     return data_8bit
-
-
 '''
 仿射变换
 '''
-
-
 def calculateTransform(ori_transform, offsetX, offsetY):
     # 读取原图仿射变换参数值
     top_left_x = ori_transform[0]  # 左上角x坐标
@@ -125,7 +157,7 @@ def calculateTransform(ori_transform, offsetX, offsetY):
 裁剪主函数 调用topatch
 typeName & index: 输入数据编号
 '''
-def clipgeotiff(inputPath, savePath, patchSize, patchIntersection, startCol, startRow, typeName, index, To8bit=False, isSlope=False):
+def clipgeotiff(inputPath, savePath, patchSize, patchIntersection, startCol, startRow, typeName, index, To8bit=False, isSlope=False,isDEM=False):
     os.makedirs(savePath, exist_ok=True)
     # 遍历文件夹
     from_names = glob.glob(os.path.join(inputPath, "*.tif"))
@@ -141,7 +173,7 @@ def clipgeotiff(inputPath, savePath, patchSize, patchIntersection, startCol, sta
 
         # 16bit to 8bit
         if To8bit is True:
-            inputData = transfer_16bit_to_8bit(inputData, isSlope)
+            inputData = transfer_16bit_to_8bit(inputData, isSlope,isDEM)
 
         # 裁剪 起始坐标
         # 原始代码的[offsetY, offsetX] = [offsetRow, offsetCol]

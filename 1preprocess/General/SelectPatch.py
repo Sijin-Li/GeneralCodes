@@ -52,7 +52,8 @@ if __name__ == "__main__":
     index = None
 
     # 原始路径
-    cwd_ori = "E:/Dataset/202101_withDinghu/temp/Dataset/202201datasetV3/size224/s1/train/allpatch"
+    cwd_ori = "E:/Dataset/202101_withDinghu/temp/Dataset/202202datasetV1_256/wangmaogou/allpatch/test/"
+        # "E:/Dataset/202101_withDinghu/temp/Dataset/202201datasetV3/size224/s1/train/allpatch"
     # 原始文件夹
     orifolder = ["image_crop", "mask_crop","dem8bit_crop", "dem_crop", "hillshade_crop", "slope_crop"]
     oripath_0 = os.path.join(cwd_ori, orifolder[0])
@@ -74,7 +75,8 @@ if __name__ == "__main__":
     sample = random.sample(pathDir, picknumber)  # 随机选取picknumber数量的样本图片
 
     # 目标路径
-    cwd_tar = "E:/Dataset/202101_withDinghu/temp/Dataset/202201datasetV3/size224/s1/train/selected"
+    cwd_tar = "E:/Dataset/202101_withDinghu/temp/Dataset/202202datasetV1_256/wangmaogou/selectedpatch/test/"
+    # "E:/Dataset/202101_withDinghu/temp/Dataset/202201datasetV3/size224/s1/train/selected"
     # 目标文件夹
     tarfolder = ["image_crop", "mask_crop","dem8bit_crop", "dem_crop", "hillshade_crop", "slope_crop"]
     tarpath_0 = os.path.join(cwd_tar, tarfolder[0])
@@ -84,43 +86,44 @@ if __name__ == "__main__":
     tarpath_4 = os.path.join(cwd_tar, tarfolder[4])
     tarpath_5 = os.path.join(cwd_tar, tarfolder[5])
 
-    os.makedirs(tarpath_0, exist_ok=True)
-    os.makedirs(tarpath_1, exist_ok=True)
+    # os.makedirs(tarpath_0, exist_ok=True)
+    # os.makedirs(tarpath_1, exist_ok=True)
     os.makedirs(tarpath_2, exist_ok=True)
-    os.makedirs(tarpath_3, exist_ok=True)
-    os.makedirs(tarpath_4, exist_ok=True)
-    os.makedirs(tarpath_5, exist_ok=True)
+    # os.makedirs(tarpath_3, exist_ok=True)
+    # os.makedirs(tarpath_4, exist_ok=True)
+    # os.makedirs(tarpath_5, exist_ok=True)
 
     for img_name in sample:
-        orifile_0 = os.path.join(oripath_0, img_name)
-        tarfile_0 = os.path.join(tarpath_0, img_name)
+        # orifile_0 = os.path.join(oripath_0, img_name)
+        # tarfile_0 = os.path.join(tarpath_0, img_name)
 
-        orifile_1 = os.path.join(oripath_1, img_name)
-        tarfile_1 = os.path.join(tarpath_1, img_name)
+        # orifile_1 = os.path.join(oripath_1, img_name)
+        # tarfile_1 = os.path.join(tarpath_1, img_name)
         
         orifile_2 = os.path.join(oripath_2, img_name)
         tarfile_2 = os.path.join(tarpath_2, img_name)
 
-        orifile_3 = os.path.join(oripath_3, img_name)
-        tarfile_3 = os.path.join(tarpath_3, img_name)
-
-        orifile_4 = os.path.join(oripath_4, img_name)
-        tarfile_4 = os.path.join(tarpath_4, img_name)
+        # orifile_3 = os.path.join(oripath_3, img_name)
+        # tarfile_3 = os.path.join(tarpath_3, img_name)
+        #
+        # orifile_4 = os.path.join(oripath_4, img_name)
+        # tarfile_4 = os.path.join(tarpath_4, img_name)
                 
         orifile_5 = os.path.join(oripath_5, img_name)
-        tarfile_5 = os.path.join(tarpath_5, img_name)
+        # tarfile_5 = os.path.join(tarpath_5, img_name)
 
         # 判断后移动
-        labellayer, _ = readtiff2array(orifile_0)
-        index = judge(labellayer)
-        if index > 50:
+        labellayer, _ = readtiff2array(orifile_5)
+        index = judge(labellayer, isSlope=True)
+        # wangmaogou train>5000 test>0
+        if index > 0:
             print(index)
             # 复制
             # shutil.copyfile(orifile_0, tarfile_0)
             # shutil.copyfile(orifile_1, tarfile_1)
-            # shutil.copyfile(orifile_2, tarfile_2)
+            shutil.copyfile(orifile_2, tarfile_2)
             # shutil.copyfile(orifile_3, tarfile_3)
-            shutil.copyfile(orifile_4, tarfile_4)
+            # shutil.copyfile(orifile_4, tarfile_4)
             # shutil.copyfile(orifile_5, tarfile_5)
 
         # 复制
