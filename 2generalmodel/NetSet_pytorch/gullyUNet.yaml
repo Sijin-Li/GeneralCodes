@@ -1,6 +1,7 @@
 train: "F:/LSJ/202201_withDing/temp/Dataset/202201datasetV3/size224/s2/train"
 valid: "F:/LSJ/202201_withDing/temp/Dataset/202201datasetV3/size224/s2/valid"
-test: "F:/LSJ/202201_withDing/temp/Dataset/202201datasetV3/size224/s2/test"
+test: "F:/LSJ/202201_withDing/temp/Dataset/202201datasetV3/size224/pujia/"
+  # "F:/LSJ/202201_withDing/temp/Dataset/202201datasetV3/size224/s2/test"
 save_path: "F:/LSJ/202201_withDing/temp/Dataset/202201datasetV3/size224/test_result"
 log: "F:/LSJ/202201_withDing/temp/Dataset/202201datasetV3/size224/logs"
 logging_step: 107
@@ -8,7 +9,7 @@ validation_interval: 214 # Save and valid have same interval
 checkpoints: "F:/LSJ/202201_withDing/temp/Dataset/202201datasetV3/size224/checkpoints"
 listpath: "F:/LSJ/202201_withDing/temp/Dataset/202201datasetV3/size224/CSV_forLossAcc/"
 
-inputtype: "image_crop"
+inputtype: "image_proj_crop"
 targettype: "mask01_crop"
 shadowtype: "shadow_crop"
 invshadowtype: "invshadow_crop"
@@ -16,7 +17,7 @@ shadow_weight: 0.1
 MASKLOSS: True
 
 batch_size: 1
-lr: 0.001
+lr: 0.001 #0.0001
 stepsize: 10 # after n steps then decrease lr
 MODELTYPE: AttU_Netwp # RESUNET, RESUNET_PLUS_PLUS, UNET, AttU_Net, AttU_Netwc, AttU_Netwp
 IMAGE_SIZE: 224

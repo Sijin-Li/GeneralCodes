@@ -42,7 +42,7 @@ class BCEDiceLoss_maskloss(nn.Module):
             pred.double().sum() + truth.double().sum() + 1
         )
 
-        return shdweight * (bce_loss_shd + (1 - dice_coef_shd)) + invshdweight* (bce_loss_inv + + (1 - dice_coef_inv))
+        return shdweight * (bce_loss_shd + (1 - dice_coef_shd)) + invshdweight * (bce_loss_inv + + (1 - dice_coef_inv))
 
 
 # https://github.com/pytorch/examples/blob/master/imagenet/main.py

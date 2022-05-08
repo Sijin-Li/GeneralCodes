@@ -49,6 +49,8 @@ class ImageDataset(Dataset):
             mask = io.imread(imagepath.replace(self.inputtype, self.targettype))
             shadow = io.imread(imagepath.replace(self.inputtype, self.shadowtype))
             invshadow = io.imread(imagepath.replace(self.inputtype, self.invshadowtype))
+            shadow = shadow / 255
+            invshadow = invshadow / 255
             sample = {"sat_img": image, "map_img": mask, "shd_img": shadow, "inv_img": invshadow,"filename": filename}
         else:           
             sample = {"sat_img": image, "filename": filename}
